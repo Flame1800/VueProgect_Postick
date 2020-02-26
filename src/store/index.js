@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import products from './modules/prodcuts'
+import posts from './modules/posts'
 import user from './modules/user'
 import common from './modules/common'
 
@@ -8,7 +8,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     modules: {
-        products,
+        posts,
         user, 
         common
     }

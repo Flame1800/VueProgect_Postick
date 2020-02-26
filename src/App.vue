@@ -1,19 +1,5 @@
 <template>
-  <v-app>
     <Navbar />
-    <template v-if="error">
-      <v-snackbar
-       
-        :timeout="5000"
-        color="error"
-        @input="closeError"
-        :value="true"
-      >
-        {{ error }}
-        <v-btn dark text @click.native="closeError">Close</v-btn>
-      </v-snackbar>
-    </template>
-  </v-app>
 </template>
 
 <script>

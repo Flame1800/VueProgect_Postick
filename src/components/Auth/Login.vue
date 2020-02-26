@@ -1,43 +1,34 @@
 <template>
-  <v-content>
-    <v-container fluid fill-height>
-      <v-layout align-center justify-center>
-        <v-flex xs12 sm8 md6>
-          <v-card class="elevation-12">
-            <v-toolbar color="primary" dark flat>
-              <v-toolbar-title>Login form</v-toolbar-title>
-            </v-toolbar>
-            <v-card-text>
-              <v-form ref="form" v-model="valid" lazy-validation>
-                <v-text-field
-                  v-model="email"
-                  label="email"
-                  name="email"
-                  :rules="emailRules"
-                  prepend-icon="person"
-                  type="email"
-                ></v-text-field>
+  <section>
+    <div class="container">
+      <h1 class="title">Log in</h1>
+      <div class="notification">
+        <b-field
+          label="Email"
+          v-model="email"
+          name="email"
+          :rules="emailRules"
+        >
+          <b-input maxlength="30"></b-input>
+        </b-field>
 
-                <v-text-field
-                  v-model="password"
-                  label="Password"
-                  name="password"
-                  :rules="passwordRules"
-                  prepend-icon="lock"
-                  type="password"
-                  :counter="6"
-                ></v-text-field>
-              </v-form>
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn @click="onSubmit" :loading='loading' color="primary" :disabled="!valid || loading">Login</v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-flex>
-      </v-layout>
-    </v-container>
-  </v-content>
+        <b-field
+          label="Password"
+          v-model="password"
+          name="password"
+          :rules="passwordRules"
+        >
+          <b-input value="123" type="password" maxlength="30"></b-input>
+        </b-field>
+        <b-button
+          @click="onSubmit"
+          :loading="loading"
+          color="primary"
+          :disabled="!valid || loading"
+        >Continiune</b-button>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -47,12 +38,10 @@ export default {
     password: "",
     valid: false,
     emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      v => !!v || "Email is required",
     ],
     passwordRules: [
       v => !!v || "Name is required",
-      v => (v && v.length >= 6) || "Password must be equal than 6 characters"
     ]
   }),
   computed: {
@@ -64,22 +53,33 @@ export default {
     onSubmit() {
       if (this.$refs.form.validate()) {
         const user = {
-          email: this.email,
+          email: this.enmail,
           password: this.password
-        }
-        this.$store.dispatch("loginUser", user)
-        .then(() => {
-          this.$router.push('/')
-        })  
-        .catch(() => {})
+        };
+        this.$store
+          .dispatch("loginUser", user)
+          .then(() => {
+            this.$router.push("/");
+          })
+          .catch(() => {});
       }
     }
   },
   created() {
-    if (this.$route.query['loginError']) {
-      this.$store.dispatch('setError', 'Please log in to acces this page')
+    if (this.$route.query["loginError"]) {
+      this.$store.dispatch("setError", "Please log in to acces this page");
     }
   }
 };
 </script>
 
+
+<style>  
+
+  .title {
+    font-size: 35px;
+    font-weight: bold;
+    margin-bottom: 30px;
+    margin-top: 120px;
+  }
+</style>

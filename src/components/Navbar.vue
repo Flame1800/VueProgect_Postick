@@ -1,45 +1,45 @@
 <template>
   <div>
-    <v-navigation-drawer app temporary v-model="sideNav">
-      <v-list>
-        <v-list-tile v-for="(link, i) in links" :key="i" :to="link.url">
-          <v-list-tile-action>
-            <v-icon>{{ link.icon }}</v-icon>
-          </v-list-tile-action>
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <router-link class="navbar-item" :to="'/'">
+          <h1 class="pointer">Postick!</h1>
+        </router-link>
 
-          <title v-text="link.title"></title>
-        </v-list-tile>
-         <v-list-tile @click="onLogout" v-if="isUserLogedIn">
-          <v-list-tile-action>
-            <v-icon>exit_to_app</v-icon>
-          </v-list-tile-action>
+        <a
+          role="button"
+          class="navbar-burger burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
 
-          <title v-text="'Logout'"></title>
-        </v-list-tile>
-      </v-list>
-    </v-navigation-drawer>
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar" v-for="(link, i) in links" :key="i">
+          <router-link class="navbar-item" :to="link.url">{{ link.title }}</router-link>
+        </div>
 
-    <v-toolbar app dark color="primary">
-      <v-toolbar-side-icon class="hidden-md-and-up" @click="sideNav = !sideNav"></v-toolbar-side-icon>
-      <v-toolbar-title>
-        <router-link to="/" tag="span" class="pointer">Fast Sneak</router-link>
-      </v-toolbar-title>
-      <v-spacer></v-spacer>
-      <v-toolbar-items class="hidden-sm-and-down">
-        <v-btn flat v-for="(link, i) in links" :key="i" :to="link.url">
-          <v-icon left>{{ link.icon }}</v-icon>
-          {{ link.title }}
-        </v-btn>
-        <v-btn flat @click="onLogout" v-if="isUserLogedIn">
-          <v-icon left>exit_to_app</v-icon>
-          Logout
-        </v-btn>
-      </v-toolbar-items>
-    </v-toolbar>
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <router-link class="button is-primary" :to="'/register'">
+                <strong>Sign up</strong>
+              </router-link>
+              <router-link class="button is-light" :to="'/login'">Log in</router-link>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
 
-    <v-content>
+    <div>
       <router-view></router-view>
-    </v-content>
+    </div>
   </div>
 </template>
 
@@ -50,8 +50,8 @@ export default {
   }),
   methods: {
     onLogout() {
-      this.$store.dispatch('logoutUser')
-      this.$router.push('/login')
+      this.$blog.dispatch("logoutUser");
+      this.$router.push("/login");
     }
   },
   computed: {
@@ -59,35 +59,14 @@ export default {
       return this.$store.getters.isUserLogedIn;
     },
     links() {
-      if (this.isUserLogedIn) {
-        return [
-          {
-            title: "Cart",
-            icon: "shopping_cart",
-            url: "/checkout"
-          },
-          {
-            title: "New Product",
-            icon: "add",
-            url: "/new"
-          },
-          {
-            title: "My Products",
-            icon: "list",
-            url: "/list"
-          }
-        ];
-      }
       return [
         {
-          title: "Login",
-          icon: "account_box",
-          url: "/login"
+          title: "New Post",
+          url: "/new"
         },
         {
-          title: "Register",
-          icon: "face",
-          url: "/register"
+          title: "My Post",
+          url: "/list"
         }
       ];
     }
@@ -98,5 +77,13 @@ export default {
 <style scoped>
 .pointer {
   cursor: pointer;
+  font-size: 25px;
+  font-weight: bold;
+}
+.buttons:not(:last-child) {
+  margin-bottom: 0;
+  margin-right: 10px;
+  margin-top: 5px;
 }
 </style>
+

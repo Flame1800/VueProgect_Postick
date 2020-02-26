@@ -1,12 +1,13 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-import Vuetify from 'vuetify'
 import store from './store'
 import * as fb from 'firebase/app';
-import 'vuetify/dist/vuetify.min.css'
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
 
-Vue.use(Vuetify)
+Vue.use(Buefy)
+
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
@@ -17,18 +18,18 @@ new Vue({
   components: { App },
   template: '<App/>',
   created () {
-    var firebaseConfig = {
-      apiKey: "AIzaSyBeIEpS3PL5TCGPLUUbF0tF6QVpZN4FU98",
-      authDomain: "onlinestore-6075c.firebaseapp.com",
-      databaseURL: "https://onlinestore-6075c.firebaseio.com",
-      projectId: "onlinestore-6075c",
-      storageBucket: "onlinestore-6075c.appspot.com",
-      messagingSenderId: "183045285136",
-      appId: "1:183045285136:web:5b42c2716bd99be1be7195",
-      measurementId: "G-2YHRNCXKNK"
+    const firebaseConfig = {
+      apiKey: "AIzaSyC6x8cq-YCop1d7NPkxP85Qj_YS6gtgHSQ",
+      authDomain: "blog-6a183.firebaseapp.com",
+      databaseURL: "https://blog-6a183.firebaseio.com",
+      projectId: "blog-6a183",
+      storageBucket: "blog-6a183.appspot.com",
+      messagingSenderId: "915450180373",
+      appId: "1:915450180373:web:cbed22483b377aedbe6f1c",
+      measurementId: "G-YS5YKC451Z"
     };
     // Initialize Firebase
-    fb.initializeApp(firebaseConfig)
+    fb.initializeApp(firebaseConfig);
 
     fb.auth().onAuthStateChanged(user => {
       if (user) {
