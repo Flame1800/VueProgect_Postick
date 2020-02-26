@@ -26,12 +26,12 @@
 
         <div class="navbar-end">
           <div class="navbar-item">
-            <div class="buttons">
-              <router-link class="button is-primary" :to="'/register'">
-                <strong>Sign up</strong>
+            <div class="buttons" v-for="(link, i) in authLinks" :key="i">
+              <router-link class="button" :to="link.url">
+                <strong>{{ link.title }}</strong>
               </router-link>
-              <router-link class="button is-light" :to="'/login'">Log in</router-link>
             </div>
+          
           </div>
         </div>
       </div>
@@ -55,20 +55,25 @@ export default {
     }
   },
   computed: {
-    isUserLogedIn() {
-      return this.$store.getters.isUserLogedIn;
-    },
     links() {
       return [
         {
           title: "New Post",
           url: "/new"
         },
-        {
-          title: "My Post",
-          url: "/list"
-        }
       ];
+    },
+    authLinks() {
+        return [
+          {
+            title: "Sign In",
+            url: "/register"
+          },
+          {
+            title: "login",
+            url: "/login"
+          }
+        ];
     }
   }
 };

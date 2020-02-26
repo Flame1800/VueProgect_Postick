@@ -7,13 +7,13 @@ import * as fb from 'firebase'
       <div class="notification">
         <section>
           <b-field label="Title">
-            <b-input v-model="title"></b-input>
+            <b-input v-model="title" required></b-input>
           </b-field>
           <b-field label="Message">
-            <b-input maxlength="200" type="textarea" v-model="description"></b-input>
+            <b-input type="textarea" required v-model="description"></b-input>
           </b-field>
         </section>
-        <b-button type="is-primary is-medium" @click="createPost">Create</b-button>
+        <b-button type="is-primary is-medium"  @click="createPost">Create</b-button>
       </div>
     </div>
   </section>
@@ -23,20 +23,28 @@ import * as fb from 'firebase'
 export default {
   data: () => ({
     title: "",
-    description: "",
+    description: ""
   }),
+  computed: {
+    loading() {
+      return this.$store.getters.loading;
+    }
+  },
   methods: {
     createPost() {
+      const newPost = {
+        title: this.title,
+        description: this.description,
+        claps: 0,
+        createdAt: new Date()
+      };
 
-        const post = {
-          title: this.title,
-          description: this.description,
-          claps: 0,
-          createdAt: new Date()
-        };
-
-        this.$store.dispatch("createPost", post);
-      
+      this.$store
+        .dispatch("createPost", newPost)
+        .then(() => {
+          this.$router.push("/");
+        })
+        .catch(() => {});
     }
   }
 };

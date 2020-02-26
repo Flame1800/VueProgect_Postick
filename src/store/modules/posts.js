@@ -1,49 +1,30 @@
+`use strict`
 import * as fb from 'firebase'
 
 class Post {
-    constructor(title, description, claps, createdAt) {
+    constructor(title, description, claps, createdAt, id) {
         this.title = title
         this.description = description
         this.claps = claps
         this.createdAt = createdAt
+        this.id = id
     }
 }
 
 export default {
     state: {
-        posts: [
-            {
-                "id": 1,
-                "title": "Пост про текст",
-                "description": "Текст",
-                "claps": 0,
-                "createdAt": "2019-09-29T00:00:00.000Z",
-                "updateAt": "2019-09-29T00:00:00.000Z",
-                "userId": 1
-              },
-              {
-                "id": 2,
-                "title": "Прост про какие то англ слова",
-                "description": "“There are two hard things in computer science: cache invalidation, naming things, and off-by-one errors.”",
-                "claps": 0,
-                "createdAt": "2019-09-29T00:00:00.000Z",
-                "updateAt": "2019-09-29T00:00:00.000Z",
-                "userId": 1
-              },
-              {
-                "id": 3,
-                "title": "Пост про контейнер",
-                "description": "card: the main container",
-                "claps": 0,
-                "createdAt": "2019-09-29T00:00:00.000Z",
-                "updateAt": "2019-09-29T00:00:00.000Z",
-                "userId": 1
-              },
-        ]
+        posts: []
     },
-    mutations: {},
+    mutations: {
+        createPost(state, payload) {
+            state.posts.push(payload)
+        },
+        loadPosts(state, payload) {
+            state.posts = payload
+        }
+    },
     actions: {
-        async createPost({commit}, payload) {
+        async createPost({ commit }, payload) {
             commit('clearError')
             commit('setLoading', true)
             try {
@@ -51,14 +32,47 @@ export default {
                     payload.title,
                     payload.description,
                     payload.claps,
-                    payload.createdAt
+                    payload.createdAt,
                 )
-                const post = await fb.database().ref('blog').push(newPost)
+                const post = await fb.database().ref('posts').push(newPost)
                 console.log(post)
-            } catch(error) {
+                commit('setLoading', false)
+                console.log({
+                    newPost: [...newPost],
+                    id: post.key
+                })
+               
+            } catch (error) {
                 commit('setError', error.message)
                 commit('setLoading', false)
                 throw error
+            }
+        },
+        async fetchPosts({ commit }) {
+            commit('clearError')
+            commit('setLoading', true)
+            const resultPosts = []
+            try {
+               const postsValue = await fb.database().ref('posts').once('value')
+               const posts = postsValue.val()
+               Object.keys(posts).forEach(key => {
+                const post = posts[key]
+                resultPosts.push(
+                    new Post(
+                        post.title,
+                        post.description,
+                        post.claps,
+                        post.createdAt,
+                        key
+                    )
+                )
+                commit('loadPosts', resultPosts)
+                commit('setLoading', false)
+               })
+            } catch(error) {
+                commit('setError', error.message)
+                commit('setLoading', false)
+                throw error 
             }
         }
     },
@@ -66,7 +80,7 @@ export default {
         posts(state) {
             return state.posts
         },
-        postById (state) {
+        postById(state) {
             return id => {
                 return state.posts.find(post => post.id === id)
             }

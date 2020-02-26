@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Home from '@/components/Home'
-import Post from '@/components/Products/Post'
 import newPost from '@/components/Products/newPost'
 import Posts from '@/components/Products/Posts'
 import Login from '@/components/Auth/Login'
@@ -18,19 +17,11 @@ export default new Router({
       component: Home,
     },
     {
-      path: '/post/:id',
-      props: true,
-      name: 'post',
-      component: Post,
-      
-    },
-    {
       path: '/list',
       name: 'list',
       component: Posts,
       beforeEnter: AuthGuard
     },
-
     {
       path: '/new',
       name: 'new',

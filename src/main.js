@@ -5,7 +5,9 @@ import store from './store'
 import * as fb from 'firebase/app';
 import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
+import Vuelidate from 'vuelidate'
 
+Vue.use(Vuelidate)
 Vue.use(Buefy)
 
 Vue.config.productionTip = false
@@ -28,13 +30,14 @@ new Vue({
       appId: "1:915450180373:web:cbed22483b377aedbe6f1c",
       measurementId: "G-YS5YKC451Z"
     };
-    // Initialize Firebase
+   
     fb.initializeApp(firebaseConfig);
 
     fb.auth().onAuthStateChanged(user => {
       if (user) {
         this.$store.dispatch('autoLoginUser', user)
       }
-    })
+    }),
+    this.$store.dispatch('fetchPosts')
   }
 }) 
