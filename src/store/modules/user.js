@@ -1,8 +1,9 @@
 import * as fb from 'firebase';
 
 class User {
-    constructor(id) {
+    constructor(id, role) {
         this.id = id
+        this.role = role
     }
 }
 
@@ -16,13 +17,15 @@ export default {
         }
     },
     actions: {
-        async registerUser({ commit }, { email, password }) {
+        async registerUser({ commit }, { email, password, role }) {
             commit('clearError')
             commit('setLoading', true)
 
             try {
-                const user = await fb.auth().createUserWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid))
+                const userFb = await fb.auth().createUserWithEmailAndPassword(email, password)
+                const user = new User(userFb.uid, role)
+                await fb.database().ref('users').push(user)
+                commit('setUser', user)
                 commit('setLoading', false)
             } catch (error) {
                 commit('setLoading', false)
@@ -30,13 +33,13 @@ export default {
                 throw error
             }
         },
-        async loginUser({ commit }, { email, password }) {
+        async loginUser({ commit }, { email, password, role }) {
             commit('clearError')
             commit('setLoading', true)
-
             try {
-                const user = await fb.auth().signInWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid))
+                const userFb = await fb.auth().signInWithEmailAndPassword(email, password)
+                const user = new User(userFb.uid, role)
+                commit('setUser', user)
                 commit('setLoading', false)
             } catch (error) {
                 commit('setLoading', false)
@@ -58,6 +61,9 @@ export default {
         },
         isUserLogedIn(state) {
             return state.user !== null
+        },
+        getUserRole(state) {
+            return state.user.role
         }
     }
 }

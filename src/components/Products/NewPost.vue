@@ -13,7 +13,7 @@ import * as fb from 'firebase'
             <b-input type="textarea" required v-model="description"></b-input>
           </b-field>
         </section>
-        <b-button type="is-primary is-medium"  @click="createPost">Create</b-button>
+        <b-button type="is-primary is-medium" class="mt-3" @click="createPost" :loading='loading'>Create</b-button>
       </div>
     </div>
   </section>
@@ -44,7 +44,7 @@ export default {
         .then(() => {
           this.$router.push("/");
         })
-        .catch(() => {});
+        .catch(console.log)
     }
   }
 };

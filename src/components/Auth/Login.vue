@@ -4,19 +4,24 @@
       <h1 class="title">Log in</h1>
       <div class="notification">
         <b-field label="Email" :class="{ 'error-input': $v.email.$error }">
-          <b-input v-model="email" @change="$v.email.$touch()"></b-input>
+          <b-input
+            required
+            pattern="[^ @]*@[^ @]*"
+            placeholder="Enter your email"
+            v-model="email"
+            @change="$v.email.$touch()"
+          ></b-input>
         </b-field>
-        <div class="error danger" v-if="!$v.email.required">Field is required</div>
-        <div class="error danger" v-if="!$v.email.email">Email is invalid</div>
 
         <b-field label="Password">
-          <b-input v-model="password" @change="$v.password.$touch()" type="password" maxlength="30"></b-input>
+          <b-input
+            v-model="password"
+            required
+            @change="$v.password.$touch()"
+            type="password"
+            minlength="6"
+          ></b-input>
         </b-field>
-        <div class="error danger" v-if="!$v.password.required">Field is required</div>
-        <div
-          class="error danger"
-          v-if="!$v.password.minLength"
-        >Password to short, min length 4 symbols</div>
         <b-button @click="onSubmit" :loading="loading" color="primary">Continiune</b-button>
       </div>
     </div>
@@ -27,7 +32,7 @@
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 export default {
   data() {
-    return { email: "", password: "" };
+    return { email: "", password: "", role: "" };
   },
   computed: {
     loading() {
@@ -37,7 +42,7 @@ export default {
   validations: {
     email: {
       required,
-      email
+      email, 
     },
     password: {
       required,

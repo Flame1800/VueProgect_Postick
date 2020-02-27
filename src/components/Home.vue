@@ -4,7 +4,7 @@
       <h1 class="main title">Posts</h1>
       <div class="card" v-for="(post, i) in posts" :key="i">
         <header class="card-header">
-          <p class="card-header-title">{{ post.title }}</p>
+          <div class="card-header-title" v-model="title">{{ post.title }}</div>
           <a href="#" class="card-header-icon" aria-label="more options">
             <span class="icon">
               <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -19,13 +19,15 @@
           </div>
         </div>
         <footer class="card-footer">
-          <a href="#" class="card-footer-item">Clap</a>
-          <a href="#" class="card-footer-item">Edit</a>
-          <a href="#" class="card-footer-item">Delete</a>
+          <b-button class="btn-claps" @click="post.claps++" type="is-primary">
+            Claps:
+            {{ post.claps }}
+          </b-button>
+          <a href="#" class="card-footer-item"  @click="edit" v-if="role === 'writer'">Edit</a>
+          <a href="#" class="card-footer-item" v-if="role === 'writer'">Delete</a>
         </footer>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -33,19 +35,36 @@
 export default {
   data() {
     return {
-
+      role: "writer"
     };
   },
   computed: {
     posts() {
       return this.$store.getters.posts;
     }
+  },
+  methods: {
+    edit() {
+      this.$buefy.dialog.prompt({
+        message: this.title,
+        inputAttrs: {
+          placeholder: "e.g. Walter",
+          maxlength: 10
+        },
+        trapFocus: true,
+        onConfirm: value => this.$buefy.toast.open(`Post is edited`)
+      });
+    }
   }
 };
 </script>
 
 <style scoped>
-  .main {
-    margin-top: 60px;
-  }
+.main {
+  margin-top: 60px;
+}
+.btn-claps {
+  margin-top: 5px;
+  margin-left: 30px;
+}
 </style>

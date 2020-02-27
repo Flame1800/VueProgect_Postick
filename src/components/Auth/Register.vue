@@ -4,24 +4,49 @@
       <h1 class="title">Create Account</h1>
       <div class="notification">
         <b-field label="Email" :class="{ 'error-input': $v.email.$error }">
-          <b-input v-model="email" @change="$v.email.$touch()"></b-input>
+          <b-input
+            required
+            pattern="[^ @]*@[^ @]*"
+            placeholder="Enter your email"
+            v-model="email"
+            @change="$v.email.$touch()"
+          ></b-input>
         </b-field>
-        <div class="error danger" v-if="!$v.email.required">Field is required</div>
-        <div class="error danger" v-if="!$v.email.email">Email is invalid</div>
 
         <b-field label="Password">
-          <b-input v-model="password" @change="$v.password.$touch()" type="password" maxlength="30"></b-input>
+          <b-input
+            v-model="password"
+            required
+            @change="$v.password.$touch()"
+            type="password"
+            minlength="=6"
+          ></b-input>
         </b-field>
-        <div class="error danger" v-if="!$v.password.required">Field is required</div>
-        <div class="error danger" v-if="!$v.password.minLength">Password to short, min length 4 symbols</div>
 
         <b-field label="Return Password" name="confirm-password">
-          <b-input type="password"  v-model="confirmPassword"  @change="$v.password.$touch()" maxlength="30"></b-input>
+          <b-input
+            type="password"
+            v-model="confirmPassword"
+            @change="$v.password.$touch()"
+            required
+            minlength="6"
+          ></b-input>
         </b-field>
-        <div class="error danger" v-if="!$v.confirmPassword.required">Field is required</div>
-        <div class="error danger" v-if="!$v.confirmPassword.sameAsPassword">Passwords must be identical </div>
+        <div
+          class="error danger"
+          v-if="!$v.confirmPassword.sameAsPassword"
+        >Пароли не совпадают</div>
 
-        <b-button @click="onSubmit" :loading="loading" color="primary">Sign Up</b-button>
+        <b-radio v-model="role" required name="name" native-value="reader">Register as a reader</b-radio>
+        <b-radio v-model="role" required name="name" native-value="writer">Register as a writer</b-radio>
+        <br />
+        <b-button
+          class="btn"
+          size="is-medium"
+          @click="onSubmit"
+          :loading="loading"
+          color="primary"
+        >Sign Up</b-button>
       </div>
     </div>
   </section>
@@ -34,7 +59,8 @@ export default {
     return {
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      role: ""
     };
   },
   validations: {
@@ -48,7 +74,7 @@ export default {
     },
     confirmPassword: {
       required,
-      sameAsPassword: sameAs('password')
+      sameAsPassword: sameAs("password")
     }
   },
   computed: {
@@ -60,7 +86,8 @@ export default {
     onSubmit() {
       const user = {
         email: this.email,
-        password: this.password
+        password: this.password,
+        role: this.role
       };
 
       this.$store
@@ -89,5 +116,9 @@ export default {
 .danger {
   color: rgb(231, 25, 25);
   font-size: 12px;
+}
+
+.btn {
+  margin-top: 30px;
 }
 </style>

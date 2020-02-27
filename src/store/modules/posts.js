@@ -2,7 +2,7 @@
 import * as fb from 'firebase'
 
 class Post {
-    constructor(title, description, claps, createdAt, id) {
+    constructor(title, description, claps, createdAt, id = 0) {
         this.title = title
         this.description = description
         this.claps = claps
@@ -34,13 +34,8 @@ export default {
                     payload.claps,
                     payload.createdAt,
                 )
-                const post = await fb.database().ref('posts').push(newPost)
-                console.log(post)
+                await fb.database().ref('posts').push(newPost)
                 commit('setLoading', false)
-                console.log({
-                    newPost: [...newPost],
-                    id: post.key
-                })
                
             } catch (error) {
                 commit('setError', error.message)

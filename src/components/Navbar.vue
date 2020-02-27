@@ -70,7 +70,7 @@ export default {
             url: "/register"
           },
           {
-            title: "login",
+            title: "Login",
             url: "/login"
           }
         ];
