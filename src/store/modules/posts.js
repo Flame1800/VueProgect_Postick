@@ -81,7 +81,7 @@ export default {
             commit('clearError')
             commit('setLoading', true)
             try {
-                await fb.database().ref('users').child(id).update({
+                await fb.database().ref('posts').child(id).update({
                     title,
                     description
                 })
