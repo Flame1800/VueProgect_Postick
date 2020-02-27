@@ -47,6 +47,7 @@
           :loading="loading"
           color="primary"
         >Sign Up</b-button>
+        <div v-if="error" class="err">{{error}}</div>
       </div>
     </div>
   </section>
@@ -80,6 +81,9 @@ export default {
   computed: {
     loading() {
       return this.$store.getters.loading;
+    },
+    error () {
+      return this.$store.getters.error
     }
   },
   methods: {
@@ -88,14 +92,14 @@ export default {
         email: this.email,
         password: this.password,
         role: this.role
-      };
+      }
 
       this.$store
         .dispatch("registerUser", user)
         .then(() => {
           this.$router.push("/");
         })
-        .catch(() => {});
+        .catch(console.log());
     }
   }
 };
@@ -120,5 +124,8 @@ export default {
 
 .btn {
   margin-top: 30px;
+}
+.err {
+  color: red;
 }
 </style>

@@ -23,6 +23,7 @@
           ></b-input>
         </b-field>
         <b-button @click="onSubmit" :loading="loading" color="primary">Continiune</b-button>
+        <div v-if="error" class="err">{{error}}</div>
       </div>
     </div>
   </section>
@@ -32,11 +33,14 @@
 import { required, email, minLength, sameAs } from "vuelidate/lib/validators";
 export default {
   data() {
-    return { email: "", password: "", role: "" };
+    return { email: "", password: ""};
   },
   computed: {
     loading() {
       return this.$store.getters.loading;
+    },
+    error () {
+      return this.$store.getters.error
     }
   },
   validations: {
@@ -54,6 +58,9 @@ export default {
     }
   },
   methods: {
+    closeError () {
+      this.$store.dispatch('clearError')
+    },
     onSubmit() {
       const user = {
         email: this.email,
@@ -91,5 +98,9 @@ export default {
 .danger {
   color: rgb(231, 25, 25);
   font-size: 12px;
+}
+
+.err {
+  color: red;
 }
 </style>

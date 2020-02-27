@@ -2,9 +2,9 @@
   <div>
     <div class="container">
       <h1 class="main title">Posts</h1>
-      <div class="card" v-for="(post, i) in posts" :key="i">
+      <div class="card post" v-for="(post, i) in posts" :key="i">
         <header class="card-header">
-          <div class="card-header-title" v-model="title">{{ post.title }}</div>
+          <div class="card-header-title">{{ post.title }}</div>
           <a href="#" class="card-header-icon" aria-label="more options">
             <span class="icon">
               <i class="fas fa-angle-down" aria-hidden="true"></i>
@@ -14,17 +14,22 @@
         <div class="card-content">
           <div class="content">
             {{ post.description }}
-            <br />
+            <hr />
             <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
           </div>
         </div>
         <footer class="card-footer">
-          <b-button class="btn-claps" @click="post.claps++" type="is-primary">
+          <b-button class="btn-claps" v-if="userLoggedIn" @click="post.claps++" type="is-primary">
             Claps:
             {{ post.claps }}
           </b-button>
-          <a href="#" class="card-footer-item"  @click="edit" v-if="role === 'writer'">Edit</a>
-          <a href="#" class="card-footer-item" v-if="role === 'writer'">Delete</a>
+
+          <router-link
+            href="#"
+            v-if="userLoggedIn"
+            class="card-footer-item"
+            :to="'/post/' + post.id"
+          >More info</router-link>
         </footer>
       </div>
     </div>
@@ -35,27 +40,18 @@
 export default {
   data() {
     return {
-      role: "writer"
+      writer: this.$store.getters.userRole === "writer" ? true : false,
+      reader: this.$store.getters.userRole === "reader" ? true : false
     };
   },
   computed: {
     posts() {
       return this.$store.getters.posts;
+    },
+    userLoggedIn() {
+      return this.$store.getters.userLoggedIn;
     }
   },
-  methods: {
-    edit() {
-      this.$buefy.dialog.prompt({
-        message: this.title,
-        inputAttrs: {
-          placeholder: "e.g. Walter",
-          maxlength: 10
-        },
-        trapFocus: true,
-        onConfirm: value => this.$buefy.toast.open(`Post is edited`)
-      });
-    }
-  }
 };
 </script>
 
@@ -66,5 +62,8 @@ export default {
 .btn-claps {
   margin-top: 5px;
   margin-left: 30px;
+}
+.post {
+  margin: 40px;
 }
 </style>

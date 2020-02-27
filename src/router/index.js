@@ -6,15 +6,28 @@ import Posts from '@/components/Products/Posts'
 import Login from '@/components/Auth/Login'
 import Register from '@/components/Auth/Register'
 import AuthGuard from './auth-guard'
-
+import EditPost from '@/components/Products/EditPost'
+import Post from '@/components/Products/Post'
 Vue.use(Router)
 
 export default new Router({
   routes: [
     {
-      path: '',
+      path: '/',
       name: 'home',
       component: Home,
+    },
+    {
+      path: '/edit',
+      props: true,
+      name: 'EditPost',
+      component: EditPost
+    },
+    {
+      path: '/post/:id',
+      props: true,
+      name: 'post',
+      component: Post
     },
     {
       path: '/list',

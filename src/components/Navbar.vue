@@ -31,7 +31,10 @@
                 <strong>{{ link.title }}</strong>
               </router-link>
             </div>
-          
+
+            <b-button class="button" @click="logout" v-if="userLoggedIn">
+              <strong>Logout</strong>
+            </b-button>
           </div>
         </div>
       </div>
@@ -49,9 +52,8 @@ export default {
     sideNav: false
   }),
   methods: {
-    onLogout() {
-      this.$blog.dispatch("logoutUser");
-      this.$router.push("/login");
+    logout() {
+      this.$store.dispatch("logoutUser");
     }
   },
   computed: {
@@ -60,10 +62,11 @@ export default {
         {
           title: "New Post",
           url: "/new"
-        },
+        }
       ];
     },
     authLinks() {
+      if (this.userLoggedIn === false) {
         return [
           {
             title: "Sign In",
@@ -73,7 +76,13 @@ export default {
             title: "Login",
             url: "/login"
           }
-        ];
+        ]
+      } else {
+        return []
+      }
+    },
+    userLoggedIn() {
+      return this.$store.getters.userLoggedIn;
     }
   }
 };

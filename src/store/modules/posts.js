@@ -21,10 +21,18 @@ export default {
         },
         loadPosts(state, payload) {
             state.posts = payload
-        }
+        },
+        updatePost(state, { title, description, id }) {
+            const post = state.posts.find(a => {
+                return a.id === id
+            })
+            post.title = title
+            post.description = description
+        },
+       
     },
     actions: {
-        async createPost({ commit }, payload) {
+        async createPost({ commit, getters }, payload) {
             commit('clearError')
             commit('setLoading', true)
             try {
@@ -33,12 +41,12 @@ export default {
                     payload.description,
                     payload.claps,
                     payload.createdAt,
+                    getters.user.id
                 )
                 await fb.database().ref('posts').push(newPost)
                 commit('setLoading', false)
-               
+
             } catch (error) {
-                commit('setError', error.message)
                 commit('setLoading', false)
                 throw error
             }
@@ -48,28 +56,58 @@ export default {
             commit('setLoading', true)
             const resultPosts = []
             try {
-               const postsValue = await fb.database().ref('posts').once('value')
-               const posts = postsValue.val()
-               Object.keys(posts).forEach(key => {
-                const post = posts[key]
-                resultPosts.push(
-                    new Post(
-                        post.title,
-                        post.description,
-                        post.claps,
-                        post.createdAt,
-                        key
+                const postsValue = await fb.database().ref('posts').once('value')
+                const posts = postsValue.val()
+                Object.keys(posts).forEach(key => {
+                    const post = posts[key]
+                    resultPosts.push(
+                        new Post(
+                            post.title,
+                            post.description,
+                            post.claps,
+                            post.createdAt,
+                            key
+                        )
                     )
-                )
-                commit('loadPosts', resultPosts)
+                    commit('loadPosts', resultPosts)
+                    commit('setLoading', false)
+                })
+            } catch (error) {
                 commit('setLoading', false)
-               })
-            } catch(error) {
-                commit('setError', error.message)
-                commit('setLoading', false)
-                throw error 
+                throw error
             }
-        }
+        },
+        async updatePost({ commit }, { title, description, id }) {
+            commit('clearError')
+            commit('setLoading', true)
+            try {
+                await fb.database().ref('users').child(id).update({
+                    title,
+                    description
+                })
+                commit('updatePost', {
+                    title,
+                    description,
+                    id
+                })
+                commit('setLoading', false)
+
+            } catch (error) {
+                commit('setLoading', false)
+                throw error
+            }
+        },
+        async deletePost({ commit }, {id}) {
+            commit('clearError')
+            commit('setLoading', true)
+            try {
+                await fb.database().ref('posts').child(id).remove()
+                commit('setLoading', false)
+            } catch (error) {
+                commit('setLoading', false)
+                throw error
+            }
+        },
     },
     getters: {
         posts(state) {
