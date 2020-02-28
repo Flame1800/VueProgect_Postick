@@ -1,6 +1,13 @@
 # VueProgect-Postick
 > A Vue.js project
 
+Тестовое задание “Аналог Medium” на должность Frontend-разработчикa (Junior) в компанию TeamLead
+
+Подробное описание: https://docs.google.com/document/d/1JJTItD5fuUActmR1637XvTlxFzG6yRQg9W1QbQS4JkU/edit
+
+Стек.
+Vue 2.x+ (Vuex, VueRouter), Buefy, Firebase
+
 # Документация
 
 ## Установка
