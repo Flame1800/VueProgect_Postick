@@ -4,10 +4,12 @@
 # Документация
 
 ## Установка
+Наберите в консоли:
 
 git clone https://github.com/Flame1800/VueProgect_Postick.git
 
-Установите зависимости
+Установите зависимости:
+
 npm install
 
 Запустите проект:
