@@ -1,6 +1,19 @@
 # VueProgect-Postick
 > A Vue.js project
 
+# Документация
+
+## Установка
+
+git clone https://github.com/Flame1800/VueProgect_Postick.git
+
+Установите зависимости
+npm install
+
+Запустите проект:
+
+npm run dev
+
 ## Build Setup
 
 ``` bash
