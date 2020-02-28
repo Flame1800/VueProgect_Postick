@@ -31,7 +31,7 @@
                 <strong>{{ link.title }}</strong>
               </router-link>
             </div>
-
+            <h3 v-if="userLoggedIn">{{ userRole }} </h3>
             <b-button class="button" @click="logout" v-if="userLoggedIn">
               <strong>Logout</strong>
             </b-button>
@@ -76,13 +76,19 @@ export default {
             title: "Login",
             url: "/login"
           }
-        ]
+        ];
       } else {
-        return []
+        return [];
       }
     },
     userLoggedIn() {
       return this.$store.getters.userLoggedIn;
+    },
+    userEmail() {
+      return this.$store.getters.userEmail;
+    },
+    userRole() {
+      return this.$store.getters.userRole;
     }
   }
 };

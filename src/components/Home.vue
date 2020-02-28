@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="container">
+    <div class="container" v-if="!loading">
       <h1 class="main title">Posts</h1>
       <div class="card post" v-for="(post, i) in posts" :key="i">
         <header class="card-header">
@@ -30,9 +30,11 @@
             class="card-footer-item"
             :to="'/post/' + post.id"
           >More info</router-link>
+           
         </footer>
       </div>
     </div>
+    <b-loading :can-cancel="true" v-else></b-loading>
   </div>
 </template>
 
@@ -50,6 +52,9 @@ export default {
     },
     userLoggedIn() {
       return this.$store.getters.userLoggedIn;
+    },
+    loading () {
+      return this.$store.getters.loading
     }
   },
 };

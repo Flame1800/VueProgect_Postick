@@ -1,9 +1,10 @@
 import * as fb from 'firebase';
 
 class User {
-    constructor(id = 0, role = 'writer', ) {
-        this.role = role
+    constructor(email, id = 0, role ) {
+        this.email = email
         this.id = id
+        this.role = role
     }
 }
 
@@ -26,11 +27,12 @@ export default {
 
             try {
                 const user = await fb.auth().createUserWithEmailAndPassword(email, password)
-                commit('setUser', new User(user.uid, role))
-                await fb.database().ref('users').push(new User(user.uid, role))
+                commit('setUser', new User(email, user.uid, role))
+                await fb.database().ref('users').push(new User(email, user.uid, role))
                 commit('setLoading', false)
             } catch (error) {
                 commit('setLoading', false)
+                commit('setError', error.message)
                 throw error
             }
         },
@@ -39,12 +41,18 @@ export default {
             commit('setLoading', true)
             try {
                 const user = await fb.auth().signInWithEmailAndPassword(email, password)
+
                 const userVal = await fb.database().ref('users').once('value')
                 const users = userVal.val()
-                Object.keys(users).forEach(key => {})
-                commit('setUser', new User(user.uid))
+                const role = Object.keys(users).forEach(key => {
+                    if (users[key].email === email) {
+                        return users[key].role
+                    }
+                })
+                commit('setUser', new User(email, user.uid, role))
                 commit('setLoading', false)
             } catch (error) {
+                commit('setError', error.message)
                 commit('setLoading', false)
                 throw error
             }
@@ -66,6 +74,9 @@ export default {
         },
         userRole(state) {
             return state.user.role
+        },
+        userEmail(state) {
+            return state.user.email
         }
     }
 }

@@ -19,7 +19,7 @@
             required
             @change="$v.password.$touch()"
             type="password"
-            minlength="=6"
+            minlength="6"
           ></b-input>
         </b-field>
 
